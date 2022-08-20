@@ -21,7 +21,7 @@ const useFetch = (url) => {
       setLoading(false);
     };
     fetchData();
-  }, [url]); // whenever our url changes, we're gonna fire this func
+  }, [url]); // [url] = whenever our url changes, url is auto updated
 
   const reFetch = async () => {
     setLoading(true);

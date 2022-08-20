@@ -17,11 +17,21 @@ import img5 from "../../assets/images/5.jpg";
 import img6 from "../../assets/images/6.jpg";
 import MailList from "../../components/mailList/MailList";
 import Footer from "../../components/footer/Footer";
+import useFetch from "../../hooks/useFetch";
+import { useLocation } from "react-router-dom";
 
 const Hotel = () => {
+  const location = useLocation();
+
+  const id = location.pathname.split("/")[2]; // ambil data id nya dari client untuk request ke api
+
   const [slideNumber, setSlideNumber] = useState(0);
   const [open, setOpen] = useState(false);
-  const photos = [
+
+  // setelah dapat id, baru request ke server untuk minta data berdasarkan id nya
+  const { data, loading, error } = useFetch(`/hotels/find/${id}`);
+
+  /* const photos = [
     {
       src: img1,
     },
@@ -40,7 +50,7 @@ const Hotel = () => {
     {
       src: img6,
     },
-  ];
+  ]; */
 
   const handleOpen = (i) => {
     setSlideNumber(i);
@@ -63,78 +73,84 @@ const Hotel = () => {
     <div>
       <Navbar />
       <Header type="list" />
-      <div className="hotelContainer">
-        {open && (
-          <div className="slider">
-            <FontAwesomeIcon
-              icon={faCircleXmark}
-              className="close"
-              onClick={() => setOpen(false)}
-            />
-            <FontAwesomeIcon
-              icon={faCircleArrowLeft}
-              className="arrow"
-              onClick={() => handleMove("-")}
-            />
-            <div className="sliderWrapper">
-              <img src={photos[slideNumber].src} alt="" className="sliderImg" />
-            </div>
-            <FontAwesomeIcon
-              icon={faCircleArrowRight}
-              className="arrow"
-              onClick={() => handleMove("+")}
-            />
-          </div>
-        )}
-        <div className="hotelWrapper">
-          <button className="bookNow">Reserve or Book now!</button>
-          <h1 className="hotelTitle">Grand Hotel</h1>
-          <div className="hotelAddress">
-            <FontAwesomeIcon icon={faLocationDot} />
-            <span>Bandung</span>
-          </div>
-          <span className="hotelDistance">
-            Excellent location - 500m from center
-          </span>
-          <span className="hotelPriceHighLight">
-            Book a stay over at this peroperty and get a free airport taxi
-          </span>
-          <div className="hotelImg">
-            {photos.map((photo, i) => (
-              <div className="hotelImgWrapper">
+      {loading ? (
+        "loading Hotel"
+      ) : (
+        <div className="hotelContainer">
+          {open && (
+            <div className="slider">
+              <FontAwesomeIcon
+                icon={faCircleXmark}
+                className="close"
+                onClick={() => setOpen(false)}
+              />
+              <FontAwesomeIcon
+                icon={faCircleArrowLeft}
+                className="arrow"
+                onClick={() => handleMove("-")}
+              />
+              <div className="sliderWrapper">
                 <img
-                  onClick={() => handleOpen(i)}
-                  src={photo.src}
+                  src={data.photos[slideNumber]}
                   alt=""
-                  className="hotelImage"
+                  className="sliderImg"
                 />
               </div>
-            ))}
-          </div>
-          <div className="hotelDetails">
-            <div className="hotelDetailsText">
-              <h1 className="hotelTitle">Stay in the heart of Mountain</h1>
-              <p className="hotelDesc">
-                Locate in Bandung, Indonesia. This is awesome place to found
-                hunting photos awesome as fuvckj
-              </p>
+              <FontAwesomeIcon
+                icon={faCircleArrowRight}
+                className="arrow"
+                onClick={() => handleMove("+")}
+              />
             </div>
-            <div className="hotelDetailsPrice">
-              <h1>Perfect for a 7-nights stay!</h1>
-              <span>
-                Located in the real heart of Bandung, this property has an
-                excellent location score of 9.8
-              </span>
-              <h2>
-                <b>Rp 1.425.000</b> (7 nights)
-              </h2>
-              <button>Reserve or Book now!</button>
+          )}
+          <div className="hotelWrapper">
+            <button className="bookNow">Reserve or Book now!</button>
+            <h1 className="hotelTitle">{data.name}</h1>
+            <div className="hotelAddress">
+              <FontAwesomeIcon icon={faLocationDot} />
+              <span>{data.address}</span>
+            </div>
+            <span className="hotelDistance">
+              Excellent location - {data.distance}m from center
+            </span>
+            <span className="hotelPriceHighLight">
+              Book a stay over Rp {data.cheapestPrice} at this peroperty and get
+              a free airport taxi
+            </span>
+            <div className="hotelImg">
+              {data.photos?.map((photo, i) => (
+                <div className="hotelImgWrapper">
+                  <img
+                    onClick={() => handleOpen(i)}
+                    src={photo}
+                    alt=""
+                    className="hotelImage"
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="hotelDetails">
+              <div className="hotelDetailsText">
+                <h1 className="hotelTitle">{data.title}</h1>
+                <p className="hotelDesc">{data.desc}</p>
+              </div>
+              <div className="hotelDetailsPrice">
+                <h1>Perfect for a 7-nights stay!</h1>
+                <span>
+                  Located in the real heart of Bandung, this property has an
+                  excellent location score of 9.8
+                </span>
+                <h2>
+                  <b>Rp 1.425.000</b> (7 nights)
+                </h2>
+                <button>Reserve or Book now!</button>
+              </div>
             </div>
           </div>
+          <MailList />
+          <Footer />
         </div>
-        <MailList />
-        <Footer />
-      </div>
+      )}
     </div>
   );
 };
