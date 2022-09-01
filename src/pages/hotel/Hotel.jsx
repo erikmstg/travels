@@ -5,7 +5,7 @@ import {
   faLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Header from "../../components/header/Header";
 import Navbar from "../../components/navbar/Navbar";
 import "./hotel.css";
@@ -18,7 +18,10 @@ import img6 from "../../assets/images/6.jpg";
 import MailList from "../../components/mailList/MailList";
 import Footer from "../../components/footer/Footer";
 import useFetch from "../../hooks/useFetch";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { SearchContext } from "../../context/SearchContext";
+import { AuthContext } from "../../context/AuthContext";
+import Reserve from "../../components/reserve/Reserve";
 
 const Hotel = () => {
   const location = useLocation();
@@ -27,9 +30,24 @@ const Hotel = () => {
 
   const [slideNumber, setSlideNumber] = useState(0);
   const [open, setOpen] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
   // setelah dapat id, baru request ke server untuk minta data berdasarkan id nya
   const { data, loading, error } = useFetch(`/hotels/find/${id}`);
+
+  const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const { dates, options } = useContext(SearchContext);
+
+  const milliSecondsPerDay = 1000 * 60 * 60 * 24;
+  const dayDifference = (date1, date2) => {
+    const timeDiff = Math.abs(date2.getTime() - date1.getTime());
+    const diffDays = Math.ceil(timeDiff / milliSecondsPerDay);
+    return diffDays;
+  };
+
+  const days = dayDifference(dates[0].endDate, dates[0].startDate);
 
   /* const photos = [
     {
@@ -67,6 +85,14 @@ const Hotel = () => {
     }
 
     setSlideNumber(newSlide);
+  };
+
+  const handleClick = () => {
+    if (user) {
+      setOpenModal(true);
+    } else {
+      navigate("/login");
+    }
   };
 
   return (
@@ -135,15 +161,21 @@ const Hotel = () => {
                 <p className="hotelDesc">{data.desc}</p>
               </div>
               <div className="hotelDetailsPrice">
-                <h1>Perfect for a 7-nights stay!</h1>
+                <h1>Perfect for a {days}-nights stay!</h1>
                 <span>
                   Located in the real heart of Bandung, this property has an
                   excellent location score of 9.8
                 </span>
                 <h2>
-                  <b>Rp 1.425.000</b> (7 nights)
+                  <b>
+                    Rp{" "}
+                    {days * data.cheapestPrice +
+                      data.cheapestPrice * options.room}
+                  </b>
+                  <br></br>
+                  <span>({days} nights)</span>
                 </h2>
-                <button>Reserve or Book now!</button>
+                <button onClick={handleClick}>Reserve or Book now!</button>
               </div>
             </div>
           </div>
@@ -151,6 +183,7 @@ const Hotel = () => {
           <Footer />
         </div>
       )}
+      {openModal && <Reserve setOpen={setOpenModal} hotelId={id} />}
     </div>
   );
 };

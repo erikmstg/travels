@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   faBed,
   faBedPulse,
@@ -15,11 +15,13 @@ import "react-date-range/dist/theme/default.css"; // theme css file
 import { format } from "date-fns";
 import "./header.css";
 import { useNavigate } from "react-router";
+import { SearchContext } from "../../context/SearchContext";
+import { AuthContext } from "../../context/AuthContext";
 
 const Header = ({ type }) => {
   const [destination, setDestination] = useState("");
   const [openDate, setOpenDate] = useState(false);
-  const [date, setDate] = useState([
+  const [dates, setDates] = useState([
     {
       startDate: new Date(),
       endDate: new Date(),
@@ -36,6 +38,8 @@ const Header = ({ type }) => {
 
   const navigate = useNavigate(); // mengirim objek data, agar ditangkap dengan useLocation
 
+  const { user } = useContext(AuthContext);
+
   const handleOption = (name, operation) => {
     setOptions((prevState) => {
       return {
@@ -45,8 +49,14 @@ const Header = ({ type }) => {
     });
   };
 
+  const { dispatch } = useContext(SearchContext);
+
   const handleSearch = () => {
-    navigate("/hotels", { state: { destination, date, options } });
+    // when we dispatch action, we should return any payload
+    // and its gonna be new state
+    // in payload, we share our information ...
+    dispatch({ type: "new_search", payload: { destination, dates, options } });
+    navigate("/hotels", { state: { destination, dates, options } });
   };
 
   return (
@@ -85,7 +95,7 @@ const Header = ({ type }) => {
               Get rewarded for your travels - Unlock instant saving of 10% your
               money
             </p>
-            <button className="headerBtn">Sign in / Register</button>
+            {!user && <button className="headerBtn">Sign in / Register</button>}
             <div className="headerSearch">
               <div className="headerSearchItem">
                 <FontAwesomeIcon icon={faBed} className="headerIcon" />
@@ -101,17 +111,17 @@ const Header = ({ type }) => {
                 <span
                   onClick={() => setOpenDate(!openDate)} // akan menghasilkan true
                   className="headerSearchText"
-                >{`${format(date[0].startDate, "dd/MM/yyyy")} - ${format(
-                  date[0].endDate,
+                >{`${format(dates[0].startDate, "dd/MM/yyyy")} - ${format(
+                  dates[0].endDate,
                   "dd/MM/yyyy"
                 )}`}</span>
                 {/* saat openDate dipanggil otomatis false */}
                 {openDate && (
                   <DateRange
                     editableDateInputs={true}
-                    onChange={(item) => setDate([item.selection])}
+                    onChange={(item) => setDates([item.selection])}
                     moveRangeOnFirstSelection={false}
-                    ranges={date}
+                    ranges={dates}
                     className="date"
                   />
                 )}
