@@ -11,8 +11,8 @@ export const register = async (req, res, next) => {
 
     // create new user
     const newUser = new User({
-      username: req.body.username,
-      email: req.body.email,
+      // pass all element children
+      ...req.body,
       password: hash,
     });
 
@@ -48,7 +48,7 @@ export const login = async (req, res, next) => {
     res
       .cookie("access_token", token, { httpOnly: true }) // berfungsi untuk doesn't allow any client secret to reach this cookie, and its more secure rn
       .status(200)
-      .json({ ...otherDetails });
+      .json({ details: { ...otherDetails }, isAdmin });
   } catch (err) {
     next(err);
   }
