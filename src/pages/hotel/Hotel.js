@@ -27,7 +27,7 @@ const Hotel = () => {
   const [openModal, setOpenModal] = useState(false);
 
   // setelah dapat id, baru request ke server untuk minta data berdasarkan id nya
-  const { data, loading, error } = useFetch(`/hotels/find/${id}`);
+  const { data, loading } = useFetch(`/hotels/find/${id}`);
 
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();

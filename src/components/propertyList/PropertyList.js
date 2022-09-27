@@ -1,4 +1,3 @@
-import React from "react";
 import "./propertyList.css";
 import img1 from "../../assets/images/1.jpg";
 import img2 from "../../assets/images/2.jpg";
@@ -8,7 +7,7 @@ import img5 from "../../assets/images/5.jpg";
 import useFetch from "../../hooks/useFetch";
 
 const PropertyList = () => {
-  const { data, loading, error } = useFetch("/hotels/countByType");
+  const { data, loading } = useFetch("/hotels/countByType");
 
   const images = [img1, img2, img3, img4, img5];
 

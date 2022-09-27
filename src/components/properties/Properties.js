@@ -1,10 +1,9 @@
-import React from "react";
 import "./properties.css";
-import img5 from "../../assets/images/5.jpg";
+
 import useFetch from "../../hooks/useFetch";
 
 const Properties = () => {
-  const { data, loading, error } = useFetch("/hotels?featured=true&limit=4");
+  const { data, loading } = useFetch("/hotels?featured=true&limit=4");
   return (
     <div className="fp">
       {loading ? (

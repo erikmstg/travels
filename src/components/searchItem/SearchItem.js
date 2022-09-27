@@ -1,4 +1,3 @@
-import React from "react";
 import "./searchItem.css";
 import img6 from "../../assets/images/6.jpg";
 import { Link } from "react-router-dom";
