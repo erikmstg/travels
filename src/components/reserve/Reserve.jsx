@@ -1,10 +1,7 @@
-import {
-  faCircleXmark,
-  faDiagramNext,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
-import React, { useState, useContext } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router";
 import { SearchContext } from "../../context/SearchContext";
 import useFetch from "../../hooks/useFetch";
@@ -13,7 +10,7 @@ import "./reserve.css";
 // fetch our room in this page
 const Reserve = ({ setOpen, hotelId }) => {
   const [selectedRoom, setSelectedRoom] = useState([]);
-  const { data, loading, error } = useFetch(`/hotels/room/${hotelId}`);
+  const { data } = useFetch(`/hotels/room/${hotelId}`);
   const { dates } = useContext(SearchContext);
 
   const navigate = useNavigate();

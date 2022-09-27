@@ -1,4 +1,3 @@
-import React from "react";
 import "./featured.css";
 import img1 from "../../assets/images/1.jpg";
 import img2 from "../../assets/images/2.jpg";
@@ -6,7 +5,7 @@ import img3 from "../../assets/images/3.jpg";
 import useFetch from "../../hooks/useFetch";
 
 const Featured = () => {
-  const { data, loading, error } = useFetch(
+  const { data, loading } = useFetch(
     "/hotels/countByCity?cities=jakarta,tangerang,bekasi"
   );
 
