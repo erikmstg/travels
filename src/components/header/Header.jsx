@@ -90,7 +90,9 @@ const Header = ({ type }) => {
         </div>
         {type !== "list" && (
           <>
-            <h1 className="headerTitle">Lifetime of discounts? It's Genius</h1>
+            <h1 className="headerTitle">
+              Lifetimeasd of discounts? It's Genius
+            </h1>
             <p className="headerDesc">
               Get rewarded for your travels - Unlock instant saving of 10% your
               money

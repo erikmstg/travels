@@ -5,16 +5,10 @@ import {
   faLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import Header from "../../components/header/Header";
 import Navbar from "../../components/navbar/Navbar";
 import "./hotel.css";
-import img1 from "../../assets/images/1.jpg";
-import img2 from "../../assets/images/2.jpg";
-import img3 from "../../assets/images/3.jpg";
-import img4 from "../../assets/images/4.jpg";
-import img5 from "../../assets/images/5.jpg";
-import img6 from "../../assets/images/6.jpg";
 import MailList from "../../components/mailList/MailList";
 import Footer from "../../components/footer/Footer";
 import useFetch from "../../hooks/useFetch";
@@ -48,27 +42,6 @@ const Hotel = () => {
   };
 
   const days = dayDifference(dates[0].endDate, dates[0].startDate);
-
-  /* const photos = [
-    {
-      src: img1,
-    },
-    {
-      src: img2,
-    },
-    {
-      src: img3,
-    },
-    {
-      src: img4,
-    },
-    {
-      src: img5,
-    },
-    {
-      src: img6,
-    },
-  ]; */
 
   const handleOpen = (i) => {
     setSlideNumber(i);
